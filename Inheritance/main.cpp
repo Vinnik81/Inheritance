@@ -152,11 +152,11 @@ public:
 	{
 		set_rate(rate);
 		set_hours(hours);
-		cout << "HConstructor:\t" << this << endl;
+		cout << "HoConstructor:\t" << this << endl;
 	}
 	~HourlyEmployee()
 	{
-		cout << "HDeconstructor:\t" << this << endl;
+		cout << "HoDeconstructor:\t" << this << endl;
 	}
 	void print()const
 	{
