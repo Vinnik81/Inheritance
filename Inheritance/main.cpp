@@ -45,180 +45,153 @@ public:
 	}
 	virtual void print()const
 	{
-		cout << last_name << " " << first_name << " " << age << " " << "years" << endl;
+		cout << last_name << " " << first_name << " " << age << " " << "лет" << endl;
 	}
 };
 
-class Student :public Human
+class Employee :public Human
 {
-	std::string speciality;
-	std::string group;
-	float rating;
-	float attendance;
+	std::string position;
 
 public:
-	const std::string& get_speciality()const
+	const std::string& get_position()const
 	{
-		return speciality;
+		return position;
 	}
-	const std::string& group_speciality()const
+	void set_position(const std::string& position)
 	{
-		return group;
+		this->position = position;
 	}
-	float get_rating()const
-	{
-		return rating;
-	}
-	float get_attendance()const
-	{
-		return attendance;
-	}
-	void set_speciality(const std::string& speciality)
-	{
-		this->speciality = speciality;
-	}
-	void set_group(const std::string& group)
-	{
-		this->group = group;
-	}
-	void set_rating(float rating)
-	{
-		this->rating = rating;
-	}
-	void set_attendance(float attendance)
-	{
-		this->attendance = attendance;
-	}
+	virtual double get_salary()const = 0;
 
-	Student
+	Employee
 	(
 		const std::string& last_name, const std::string& first_name, unsigned int age,
-		const std::string& speciality, const std::string& group, float rating, float attendance
+		const std::string& position
 	) :Human(last_name, first_name, age)
 	{
-		set_speciality(speciality);
-		set_group(group);
-		set_rating(rating);
-		set_attendance(attendance);
-		cout << "SConstructor:\t" << this << endl;
+		set_position(position);
+		cout << "EConstructor:\t" << this << endl;
 	}
-	~Student()
+	~Employee()
 	{
-		cout << "SDestructor:\t" << this << endl;
+		cout << "EDestructor:\t" << this << endl;
 	}
 	void print()const
 	{
 		Human::print();
-		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
+		cout << position << endl;
 	}
 };
 
-class Teacher : public Human
+class ParmamentEmployee : public Employee
 {
-	std::string speciality;
-	unsigned int experience;
+	double salary;
 public:
-	const std::string& get_speciality()const
+	double get_salary()const
 	{
-		return speciality;
+		return salary;
 	}
-	unsigned int get_experience()const
+	void set_salary(double salary)
 	{
-		return experience;
+		this->salary = salary;
 	}
-	void set_speciality(const std::string& speciality)
-	{
-		this->speciality = speciality;
-	}
-	void set_experience(unsigned int experience)
-	{
-		this->experience = experience;
-	}
-	Teacher
+	
+	ParmamentEmployee
 	(
 		const std::string& last_name, const std::string& first_name, unsigned int age,
-		const std::string& speciality, unsigned int experience
-	): Human(last_name, first_name, age)
+		const std::string& position, double salary
+	): Employee(last_name, first_name, age, position)
 	{
-		set_speciality(speciality);
-		set_experience(experience);
-		cout << "TConstructor:\t" << this << endl;
+		set_salary(salary);
+		cout << "PConstructor:\t" << this << endl;
 	}
-	~Teacher()
+	~ParmamentEmployee()
 	{
-		cout << "TDeconstructor:\t" << this << endl;
+		cout << "PDeconstructor:\t" << this << endl;
 	}
 	void print()const
 	{
-		Human::print();
-		cout << speciality << " " << experience << endl;
+		Employee::print();
+		cout << salary << endl;
 	}
 };
 
-class Graduate : public Student
+class HourlyEmployee : public Employee
 {
-	std::string subject;
+	double rate;
+	int hours;
 
 public:
-	const std::string& get_subject()const
+	double get_rate()const
 	{
-		return subject;
+		return rate;
 	}
-	void set_subject(const std::string& subject)
+	int get_hours()const
 	{
-		this->subject = subject;
+		return hours;
 	}
-	Graduate
+	double get_salary()const
+	{
+		return rate * hours;
+	}
+	void set_rate(double rate)
+	{
+		this->rate = rate;
+	}
+	void set_hours(int hours)
+	{
+		this->hours = hours;
+	}
+	HourlyEmployee
 	(
 		const std::string& last_name, const std::string& first_name, unsigned int age,
-		const std::string& speciality, const std::string& group, float rating, float attendance,
-		const std::string& subject
-	) :Student(last_name, first_name, age, speciality, group, rating, attendance)
+		const std::string& position,
+		double rate, int hours
+	) :Employee(last_name, first_name, age, position)
 	{
-		set_subject(subject);
-		cout << "GConstructor:\t" << this << endl;
+		set_rate(rate);
+		set_hours(hours);
+		cout << "HConstructor:\t" << this << endl;
 	}
-	~Graduate()
+	~HourlyEmployee()
 	{
-		cout << "GDeconstructor:\t" << this << endl;
+		cout << "HDeconstructor:\t" << this << endl;
 	}
 	void print()const
 	{
-		Student::print();
-		cout << subject << endl;
+		Employee::print();
+		cout << "отработано: " << hours << " часов" << "; " << "зарплата: " << get_salary() << endl;
 	}
 };
 
-//#define INHERITANCE_CHEK
 
 void main()
 {
 	setlocale(LC_ALL, "");
-#ifdef INHERITANCE_CHEK
-	Human human("Misha", "Specialist", 18);
-	human.print();
-	Student student("Jessi", "Pinkman", 20, "Chim", "WW121", 90, 85);
-	student.print();
-	Teacher teacher("White", "Walter", 50, "Chim", 20);
-	teacher.print();
-	Graduate graduate("Shrader", "Hank", 40, "Criminalistic", "WW121", 95, 55, "How to catch Heisenberg");
-	graduate.print();
-#endif // INHERITANCE_CHEK
 
 	//Generalisation:
-	Human* group[] =
+	Employee* department[] =
 	{
-		new Student("Jessi", "Pinkman", 20, "Chim", "WW121", 90, 85),
-		new Teacher("White", "Walter", 50, "Chim", 20),
-		new Graduate("Shrader", "Hank", 40, "Criminalistic", "WW121", 95, 55, "How to catch Heisenberg"),
-		new Student("Vercetty", "Tomas", 30, "Criminalistic", "Vice", 98, 95),
-		new Teacher("Dias", "Ricardo", 50, "Weapons distribution", 30)
+		new ParmamentEmployee("Точилин", "Михалыч", 65, "Начальник отдела", 160000),
+		new ParmamentEmployee("Всезнайков", "Петрович", 50, "Ведущий инженер", 40000),
+		new ParmamentEmployee("Переделкина", "Антонина", 42, "Инженер-технолог", 23248),
+		new ParmamentEmployee("Кабалаоператиев", "Жанат", 30, "Специалист IT", 12000),
+		new HourlyEmployee("Побегушкин", "Алексей", 22, "Инженер 3 кат.", 120, 168),
+		new HourlyEmployee("Веселков", "Павел", 25, "Инженер 2 кат.", 158, 170),
+		new HourlyEmployee("Безразличный", "Эдуард", 38, "Инженер 1 кат.", 200, 162),
+		new HourlyEmployee("Подлизин", "Иван", 46, "Инженер-испытатель", 180, 230),
 	};
-	cout << "\n----------------------------------------\n";
+	
 	//Specialisation:
-	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	double total_salary = 0;
+	for (int i = 0; i < sizeof(department) / sizeof(Employee*); i++)
 	{
-		group[i]->print();
 		cout << "\n----------------------------------------\n";
+		department[i]->print();
+		total_salary += department[i]->get_salary();
 	}
+	cout << "\n----------------------------------------\n";
+	cout << "Зарплата всего отдела: " << total_salary;
+	cout << "\n----------------------------------------\n";
 }
