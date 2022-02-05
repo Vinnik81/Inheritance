@@ -39,7 +39,7 @@ public:
 		set_age(age);
 		cout << "HConstructor:\t" << this << endl;
 	}
-	~Human()
+	virtual ~Human()
 	{
 		cout << "HDestructor:\t" << this << endl;
 	}
@@ -108,7 +108,7 @@ public:
 	}
 	~ParmamentEmployee()
 	{
-		cout << "PDeconstructor:\t" << this << endl;
+		cout << "PDestructor:\t" << this << endl;
 	}
 	void print()const
 	{
@@ -156,7 +156,7 @@ public:
 	}
 	~HourlyEmployee()
 	{
-		cout << "HoDeconstructor:\t" << this << endl;
+		cout << "HoDestructor:\t" << this << endl;
 	}
 	void print()const
 	{
@@ -190,6 +190,11 @@ void main()
 		cout << "\n----------------------------------------\n";
 		department[i]->print();
 		total_salary += department[i]->get_salary();
+	}
+	for (int i = 0; i < sizeof(department) / sizeof(Employee*); i++)
+	{
+		cout << "\n----------------------------------------\n";
+		delete department[i];
 	}
 	cout << "\n----------------------------------------\n";
 	cout << "Зарплата всего отдела: " << total_salary;
