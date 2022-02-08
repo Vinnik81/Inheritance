@@ -45,7 +45,15 @@ public:
 	}
 	virtual std::ostream& print(std::ostream& os)const
 	{
-		return os << last_name << " " << first_name << " " << age << " " << "years";
+		os << "\n----------------------------------------------------------------------------------------------------------\n";
+		os << std::left;
+		os.width(15);
+		os << last_name;
+		os.width(15);
+		os << first_name;
+		os.width(3);
+		os << age << "years";
+		 return os;
 	}
 };
 
@@ -113,11 +121,22 @@ public:
 	}
 	std::ostream& print(std::ostream& os)const
 	{
-		return Human::print(os) << " "
+		/*return Human::print(os) << " "
 			<< speciality << " " 
 			<< group << " " 
 			<< rating << " " 
-			<< attendance;
+			<< attendance;*/
+		Human::print(os) << " | ";
+		os << std::left;
+		os.width(22);
+		os << speciality;
+		os.width(8);
+		os << group;
+		os.width(4);
+		os << rating;
+		os.width(4);
+		os << attendance;
+		return os;
 	}
 };
 
@@ -158,7 +177,14 @@ public:
 	}
 	std::ostream& print(std::ostream& os)const
 	{
-		return Human::print(os) << " " << speciality << " " << experience;
+		/*return Human::print(os) << " " << speciality << " " << experience;*/
+		Human::print(os) << " | ";
+		os << std::left;
+		os.width(22);
+		os << speciality;
+		os.width(4);
+		os << experience;
+		return os;
 	}
 };
 
@@ -191,7 +217,7 @@ public:
 	}
 	std::ostream& print(std::ostream& os)const
 	{
-		return Student::print(os) << " " << subject;
+		return Student::print(os) << " | " << subject;
 	}
 };
 
@@ -220,13 +246,13 @@ void main()
 		new Student("Vercetty", "Tomas", 30, "Criminalistic", "Vice", 98, 95),
 		new Teacher("Dias", "Ricardo", 50, "Weapons distribution", 30)
 	};
-	cout << "\n----------------------------------------\n";
+	//cout << "\n----------------------------------------\n";
 	//Specialisation:
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
 		//group[i]->print();
-		cout << *group[i];
-		cout << "\n----------------------------------------\n";
+		cout << *group[i] << endl;
+		//cout << "\n----------------------------------------\n";
 	}
 	//Очистка памяти:
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
