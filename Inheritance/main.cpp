@@ -49,6 +49,11 @@ public:
 	}
 };
 
+std::ostream& operator<<(std::ostream& os, const Human& obj)
+{
+	return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age();
+}
+
 class Student :public Human
 {
 	std::string speciality;
@@ -61,7 +66,7 @@ public:
 	{
 		return speciality;
 	}
-	const std::string& group_speciality()const
+	const std::string& get_group()const
 	{
 		return group;
 	}
@@ -113,6 +118,15 @@ public:
 	}
 };
 
+std::ostream& operator<<(std::ostream& os, const Student& obj)
+{
+	os << (Human&)obj << " ";
+	return os << obj.get_speciality() << " "
+		<< obj.get_group() << " " 
+		<< obj.get_rating() << " " 
+		<< obj.get_attendance();
+}
+
 class Teacher : public Human
 {
 	std::string speciality;
@@ -155,6 +169,11 @@ public:
 	}
 };
 
+std::ostream& operator<<(std::ostream& os, const Teacher& obj)
+{
+	return os << (Human&)obj << " " << obj.get_speciality() << " " << obj.get_experience();
+}
+
 class Graduate : public Student
 {
 	std::string subject;
@@ -189,6 +208,11 @@ public:
 	}
 };
 
+std::ostream& operator<<(std::ostream& os, const Graduate& obj)
+{
+	return os << (Student&)obj << " " << obj.get_subject();
+}
+
 //#define INHERITANCE_CHEK
 
 void main()
@@ -205,7 +229,7 @@ void main()
 	graduate.print();
 #endif // INHERITANCE_CHEK
 
-	//Generalisation:
+	//Generalisation (Upcast):
 	Human* group[] =
 	{
 		new Student("Jessi", "Pinkman", 20, "Chim", "WW121", 90, 85),
@@ -215,10 +239,15 @@ void main()
 		new Teacher("Dias", "Ricardo", 50, "Weapons distribution", 30)
 	};
 	cout << "\n----------------------------------------\n";
-	//Specialisation:
+	//Specialisation (Douwncast):
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
-		group[i]->print();
+		//group[i]->print();
+		//cout << *group[i] << endl;
+		cout << typeid(*group[i]).name() << ":\t";
+		if (typeid(*group[i]) == typeid(Student))cout << *dynamic_cast<Student*>(group[i]) << endl;
+		if (typeid(*group[i]) == typeid(Graduate))cout << *dynamic_cast<Graduate*>(group[i]) << endl;
+		if (typeid(*group[i]) == typeid(Teacher))cout << *dynamic_cast<Teacher*>(group[i]) << endl;
 		cout << "\n----------------------------------------\n";
 	}
 }
