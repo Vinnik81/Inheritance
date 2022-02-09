@@ -133,8 +133,8 @@ public:
 	{
 		Figure::print();
 		cout << typeid(*this).name() << endl;
-		cout << "Длинна стороны: " << side_a << endl;
-		cout << "Длинна стороны: " << side_b << endl;
+		cout << "Длинна стороны a: " << side_a << endl;
+		cout << "Длинна стороны b: " << side_b << endl;
 	}
 };
 class Circle : public Figure
