@@ -1,224 +1,254 @@
-#include<iostream>
+﻿#include<iostream>
+#include<math.h>
 using namespace std;
 
-class Human
+class Figure
 {
-protected:
-	std::string last_name;
-	std::string first_name;
-	unsigned int age;
 public:
-	const std::string get_last_name()const
+
+	Figure()
 	{
-		return last_name;
+		cout << "FConstructor:\t" << this << endl;
 	}
-	const std::string get_first_name()const
+	virtual ~Figure()
 	{
-		return first_name;
+		cout << "FDestructor:\t" << this << endl;
 	}
-	unsigned int get_age()const
-	{
-		return age;
-	}
-	void set_last_name(const std::string& last_name)
-	{
-		this->last_name = last_name;
-	}
-	void set_first_name(const std::string& first_name)
-	{
-		this->first_name = first_name;
-	}
-	void set_age(unsigned int age)
-	{
-		this->age = age;
-	}
-	Human(const std::string& last_name,const std::string& first_name, unsigned int age)
-	{
-		set_last_name(last_name);
-		set_first_name(first_name);
-		set_age(age);
-		cout << "HConstructor:\t" << this << endl;
-	}
-	~Human()
-	{
-		cout << "HDestructor:\t" << this << endl;
-	}
+
+	virtual double get_area()const = 0;
+	virtual double get_perimeter()const = 0;
+	virtual void draw()const = 0;
 	virtual void print()const
 	{
-		cout << last_name << " " << first_name << " " << age << " " << "years" << endl;
+		cout << "Площадь:\t" << get_area() << endl;
+		cout << "Периметр:\t" << get_perimeter() << endl;
+		draw();
 	}
 };
 
-class Student :public Human
+class Square :public Figure
 {
-	std::string speciality;
-	std::string group;
-	float rating;
-	float attendance;
-
+	double side;
 public:
-	const std::string& get_speciality()const
+	double get_side()const
 	{
-		return speciality;
+		return side;
 	}
-	const std::string& group_speciality()const
+	void set_side(double side)
 	{
-		return group;
-	}
-	float get_rating()const
-	{
-		return rating;
-	}
-	float get_attendance()const
-	{
-		return attendance;
-	}
-	void set_speciality(const std::string& speciality)
-	{
-		this->speciality = speciality;
-	}
-	void set_group(const std::string& group)
-	{
-		this->group = group;
-	}
-	void set_rating(float rating)
-	{
-		this->rating = rating;
-	}
-	void set_attendance(float attendance)
-	{
-		this->attendance = attendance;
+		this->side = side;
 	}
 
-	Student
-	(
-		const std::string& last_name, const std::string& first_name, unsigned int age,
-		const std::string& speciality, const std::string& group, float rating, float attendance
-	) :Human(last_name, first_name, age)
+	Square
+	(double side)
 	{
-		set_speciality(speciality);
-		set_group(group);
-		set_rating(rating);
-		set_attendance(attendance);
+		set_side(side);
 		cout << "SConstructor:\t" << this << endl;
 	}
-	~Student()
+	~Square()
 	{
 		cout << "SDestructor:\t" << this << endl;
 	}
+
+	double get_area()const
+	{
+		return pow(side, 2);
+	}
+	double get_perimeter()const
+	{
+		return side * 4;
+	}
+	void draw()const
+	{
+		for (int i = 0; i < side; i++)
+		{
+			for (int i = 0; i < side; i++)
+			{
+				cout << "* ";
+			}
+			cout << endl;
+		}
+	}
 	void print()const
 	{
-		Human::print();
-		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
+		Figure::print();
+		cout << typeid(*this).name() << endl;
+		cout << "Длинна стороны: " << side << endl;
 	}
 };
 
-class Teacher : public Human
+class Rectangle : public Figure
 {
-	std::string speciality;
-	unsigned int experience;
+	double side_a;
+	double side_b;
 public:
-	const std::string& get_speciality()const
+	double get_side_a()const
 	{
-		return speciality;
+		return side_a;
 	}
-	unsigned int get_experience()const
+	double get_side_b()const
 	{
-		return experience;
+		return side_b;
 	}
-	void set_speciality(const std::string& speciality)
+	void set_side_a(double side_a)
 	{
-		this->speciality = speciality;
+		this->side_a = side_a;
 	}
-	void set_experience(unsigned int experience)
+	void set_side_b(double side_b)
 	{
-		this->experience = experience;
+		this->side_b = side_b;
 	}
-	Teacher
-	(
-		const std::string& last_name, const std::string& first_name, unsigned int age,
-		const std::string& speciality, unsigned int experience
-	): Human(last_name, first_name, age)
+
+	Rectangle(double side_a, double side_b)
 	{
-		set_speciality(speciality);
-		set_experience(experience);
+		set_side_a(side_a);
+		set_side_b(side_b);
+		cout << "RConstructor:\t" << this << endl;
+	}
+	~Rectangle()
+	{
+		cout << "RDestructor:\t" << this << endl;
+	}
+
+	double get_area()const
+	{
+		return side_a * side_b;
+	}
+	double get_perimeter()const
+	{
+		return 2 * (side_a + side_b);
+	}
+	void draw()const
+	{
+		for (int i = 0; i < side_b; i++)
+		{
+			for (int i = 0; i < side_a; i++)
+			{
+				cout << "* ";
+			}
+			cout << endl;
+		}
+	}
+	void print()const
+	{
+		Figure::print();
+		cout << typeid(*this).name() << endl;
+		cout << "Длинна стороны: " << side_a << endl;
+		cout << "Длинна стороны: " << side_b << endl;
+	}
+};
+class Circle : public Figure
+{
+	double radius;
+	double PI = 3.1415926;
+public:
+	double get_radius()const
+	{
+		return radius;
+	}
+	void set_radius(double radius)
+	{
+		this->radius = radius;
+	}
+
+	Circle(double radius)
+	{
+		set_radius(radius);
+		cout << "CConstructor:\t" << this << endl;
+	}
+	~Circle()
+	{
+		cout << "CDestructor:\t" << this << endl;
+	}
+
+	double get_area()const
+	{
+		return PI * pow(radius, 2);
+	}
+	double get_perimeter()const
+	{
+		return 2 * PI * radius;
+	}
+	void draw()const
+	{
+		cout << "Круг" << endl;
+	}
+	void print()const
+	{
+		Figure::print();
+		cout << typeid(*this).name() << endl;
+		cout << "Радиус круга: " << radius << endl;
+	}
+};
+
+class Triangle : public Figure
+{
+	double height;
+	double side;
+public:
+	double get_side()const
+	{
+		return side;
+	}
+	double get_height()const
+	{
+		return sqrt(3) / 2 * side;
+	}
+	void set_side(double side)
+	{
+		this->side = side;
+	}
+
+	Triangle(double side)
+	{
+		set_side(side);
 		cout << "TConstructor:\t" << this << endl;
 	}
-	~Teacher()
+	~Triangle()
 	{
-		cout << "TDeconstructor:\t" << this << endl;
+		cout << "TDestructor:\t" << this << endl;
+	}
+
+	double get_area()const
+	{
+		return (get_height() / 2) * side;
+	}
+	double get_perimeter()const
+	{
+		return side * 3;
+	}
+	void draw()const
+	{
+		for (int i = 0; i < side; i++)
+		{
+			for (int j = 0; j <= i; j++)
+			{
+				cout << "* ";
+			}
+			cout << endl;
+		}
 	}
 	void print()const
 	{
-		Human::print();
-		cout << speciality << " " << experience << endl;
+		Figure::print();
+		cout << typeid(*this).name() << endl;
+		cout << "Длинна треугольника: " << side << endl;
 	}
 };
-
-class Graduate : public Student
-{
-	std::string subject;
-
-public:
-	const std::string& get_subject()const
-	{
-		return subject;
-	}
-	void set_subject(const std::string& subject)
-	{
-		this->subject = subject;
-	}
-	Graduate
-	(
-		const std::string& last_name, const std::string& first_name, unsigned int age,
-		const std::string& speciality, const std::string& group, float rating, float attendance,
-		const std::string& subject
-	) :Student(last_name, first_name, age, speciality, group, rating, attendance)
-	{
-		set_subject(subject);
-		cout << "GConstructor:\t" << this << endl;
-	}
-	~Graduate()
-	{
-		cout << "GDeconstructor:\t" << this << endl;
-	}
-	void print()const
-	{
-		Student::print();
-		cout << subject << endl;
-	}
-};
-
-//#define INHERITANCE_CHEK
 
 void main()
 {
 	setlocale(LC_ALL, "");
-#ifdef INHERITANCE_CHEK
-	Human human("Misha", "Specialist", 18);
-	human.print();
-	Student student("Jessi", "Pinkman", 20, "Chim", "WW121", 90, 85);
-	student.print();
-	Teacher teacher("White", "Walter", 50, "Chim", 20);
-	teacher.print();
-	Graduate graduate("Shrader", "Hank", 40, "Criminalistic", "WW121", 95, 55, "How to catch Heisenberg");
-	graduate.print();
-#endif // INHERITANCE_CHEK
-
-	//Generalisation:
-	Human* group[] =
-	{
-		new Student("Jessi", "Pinkman", 20, "Chim", "WW121", 90, 85),
-		new Teacher("White", "Walter", 50, "Chim", 20),
-		new Graduate("Shrader", "Hank", 40, "Criminalistic", "WW121", 95, 55, "How to catch Heisenberg"),
-		new Student("Vercetty", "Tomas", 30, "Criminalistic", "Vice", 98, 95),
-		new Teacher("Dias", "Ricardo", 50, "Weapons distribution", 30)
-	};
-	cout << "\n----------------------------------------\n";
-	//Specialisation:
-	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
-	{
-		group[i]->print();
-		cout << "\n----------------------------------------\n";
-	}
+	Square s(5);
+	s.print();
+	cout << "\n-----------------------------------------------------------\n";
+	Rectangle r(8, 5);
+	r.print();
+	cout << "\n-----------------------------------------------------------\n";
+	Circle c(5);
+	c.print();
+	cout << "\n-----------------------------------------------------------\n";
+	Triangle t(8);
+	t.print();
+	cout << "\n-----------------------------------------------------------\n";
 }
