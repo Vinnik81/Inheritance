@@ -1,0 +1,5 @@
+Jessi|         Pinkman|        20|Chim|                 WW121|  90,000000|85  
+White|         Walter|         50|Chim|                 20  
+Shrader|       Hank|           40|Criminalistic|        WW121|  95,000000|55  |How to catch Heisenberg
+Vercetty|      Tomas|          30|Criminalistic|        Vice|   98,000000|95  
+Dias|          Ricardo|        50|Weapons distribution| 30  

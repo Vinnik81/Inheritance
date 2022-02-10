@@ -1,4 +1,6 @@
-#include<iostream>
+ï»¿#include<iostream>
+#include<fstream>
+#include<string>
 using namespace std;
 
 class Human
@@ -55,9 +57,26 @@ public:
 		os << age << "years";
 		 return os;
 	}
+	virtual std::ofstream& print(std::ofstream& os)const
+	{
+		os << std::left;
+		os.width(15);
+		os << last_name + "|";
+		os.width(15);
+		os << first_name +"|";
+		os.width(3);
+		os << std::right;
+		os << age;
+		 return os;
+	}
+
 };
 
 std::ostream& operator<<(std::ostream& os, const Human& obj)
+{
+	return obj.print(os);
+}
+std::ofstream& operator<<(std::ofstream& os, const Human& obj)
 {
 	return obj.print(os);
 }
@@ -138,6 +157,20 @@ public:
 		os << attendance;
 		return os;
 	}
+	std::ofstream& print(std::ofstream& os)const
+	{
+		Human::print(os) << "|";
+		os << std::left;
+		os.width(22);
+		os << speciality +"|";
+		os.width(8);
+		os << group +"|";
+		os.width(4);
+		os << std::to_string(rating) + "|";
+		os.width(4);
+		os << attendance;
+		return os;
+	}
 };
 
 class Teacher : public Human
@@ -186,6 +219,16 @@ public:
 		os << experience;
 		return os;
 	}
+	std::ofstream& print(std::ofstream& os)const
+	{
+		Human::print(os) << "|";
+		os << std::left;
+		os.width(22);
+		os << speciality + "|";
+		os.width(4);
+		os << experience;
+		return os;
+	}
 };
 
 class Graduate : public Student
@@ -218,6 +261,11 @@ public:
 	std::ostream& print(std::ostream& os)const
 	{
 		return Student::print(os) << " | " << subject;
+	}
+	std::ofstream& print(std::ofstream& os)const
+	{
+		Student::print(os) << "|" << subject;
+		return os;
 	}
 };
 
@@ -254,7 +302,16 @@ void main()
 		cout << *group[i] << endl;
 		//cout << "\n----------------------------------------\n";
 	}
-	//Î÷èñòêà ïàìÿòè:
+
+	ofstream fout("group.txt");
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		fout << *group[i] << endl;
+	}
+	fout.close();
+	system("notepad group.txt");
+
+	//ÐžÑ‡Ð¸ÑÑ‚ÐºÐ° Ð¿Ð°Ð¼ÑÑ‚Ð¸:
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
 		delete group[i];
