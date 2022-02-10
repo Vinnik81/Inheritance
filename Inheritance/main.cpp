@@ -61,6 +61,8 @@ public:
 	{
 		os << std::left;
 		os.width(15);
+		os << std::string(typeid(*this).name()) + ":";
+		os.width(15);
 		os << last_name + "|";
 		os.width(15);
 		os << first_name +"|";
@@ -69,7 +71,16 @@ public:
 		os << age;
 		 return os;
 	}
-
+	
+	virtual ifstream& scan(ifstream & is)
+		{
+			std::getline(is, last_name, '|');
+			std::getline(is, first_name, '|');
+			last_name.erase(0, last_name.find_first_not_of(' '));
+			first_name.erase(0, first_name.find_first_not_of(' '));
+			is >> age;
+			return is;
+		}
 };
 
 std::ostream& operator<<(std::ostream& os, const Human& obj)
@@ -79,6 +90,10 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 std::ofstream& operator<<(std::ofstream& os, const Human& obj)
 {
 	return obj.print(os);
+}
+std::ifstream& operator>>(std::ifstream& is, Human& obj)
+{
+	return obj.scan(is);
 }
 
 class Student :public Human
@@ -171,6 +186,22 @@ public:
 		os << attendance;
 		return os;
 	}
+	ifstream& scan(ifstream& is)
+	{
+		Human::scan(is);
+		is.ignore();
+		std::getline(is, speciality, '|');
+		std::getline(is, group, '|');
+
+		speciality.erase(0, speciality.find_first_not_of(' '));
+		group.erase(0, group.find_first_not_of(' '));
+
+		std::string rating;
+		std::getline(is, rating, '|');
+		this->rating = std::stod(rating);//stod() string to double
+		is >> attendance;
+		return is;
+	}
 };
 
 class Teacher : public Human
@@ -229,6 +260,15 @@ public:
 		os << experience;
 		return os;
 	}
+	ifstream& scan(ifstream& is)
+	{
+		Human::scan(is);
+		is.ignore();
+		std::getline(is, speciality, '|');
+		speciality.erase(0, speciality.find_first_not_of(' '));
+		is >> experience;
+		return is;
+	}
 };
 
 class Graduate : public Student
@@ -267,9 +307,28 @@ public:
 		Student::print(os) << "|" << subject;
 		return os;
 	}
+	ifstream& scan(ifstream& is)
+	{
+		Student::scan(is);
+		std::getline(is, subject);
+		subject[subject.find('|')] = ' ';
+		subject.erase(0, subject.find_first_not_of(' '));
+		return is;
+	}
 };
 
+Human* humanFactory(std::string& type)
+{
+	if (type.find("class Student") != std::string::npos)return new Student("", "", 0, "", "", 0, 0);
+	if (type.find("class Graduate") != std::string::npos)return new Graduate("", "", 0, "", "", 0, 0, "");
+	if (type.find("class Teacher") != std::string::npos)return new Teacher("", "", 0, "", 0);
+	return nullptr;
+}
+
+
 //#define INHERITANCE_CHEK
+//#define POLIMORPHISM_CHEK
+#define READ_FROM_FILE_CHECK
 
 void main()
 {
@@ -285,6 +344,7 @@ void main()
 	graduate.print();
 #endif // INHERITANCE_CHEK
 
+#ifdef POLIMORPHISM_CHEK
 	//Generalisation:
 	Human* group[] =
 	{
@@ -317,5 +377,58 @@ void main()
 		delete group[i];
 		cout << "\n----------------------------------------\n";
 	}
+#endif // POLIMORPHISM_CHEK
 
+#ifdef READ_FROM_FILE_CHECK
+	Human** group = nullptr;
+	ifstream fin("group.txt");
+	int n = 0;//Размер файла в строках
+	if (fin.is_open())
+	{
+		//1) Считаем размер файла:
+		std::string buffer;
+		while (!fin.eof())
+		{
+			std::getline(fin, buffer);
+			if (buffer.find("class") != std::string::npos)n++;
+		}
+
+		//2) Выделяем размер файла под массив указателей:
+		group = new Human* [n] {};
+		cout << fin.tellg() << endl;
+
+		//3) Возвращаемся в начало файла, для того, чтобы прочитать его:
+		fin.clear();
+		fin.seekg(0);
+		cout << fin.tellg() << endl;
+
+		//4) Читаем файл, и загружаем его строки в память:
+		std::string type;
+		for (int i = 0; i < n; i++)
+		{
+			cout << fin.tellg() << endl;
+			std::getline(fin, type, ':');
+			group[i] = humanFactory(type);
+			fin >> *group[i];
+		}
+
+		fin.close();
+	}
+	else
+	{
+		cerr << "Error: file not found" << endl;
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		cout << *group[i] << endl;
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		delete group[i];
+	}
+	delete[] group;
+
+#endif // READ_FROM_FILE_CHECK
 }
