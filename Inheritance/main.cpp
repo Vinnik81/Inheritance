@@ -183,32 +183,47 @@ public:
 
 class Triangle : public Figure
 {
-	double height;
+public:
+	Triangle()
+	{
+		cout << "TConstructor:\t" << this << endl;
+	}
+    ~Triangle()
+	{
+		cout << "TDestructor:\t" << this << endl;
+	}
+
+	virtual double get_height()const = 0;
+};
+
+
+class EquilateralTriangle : public Triangle
+{
 	double side;
 public:
 	double get_side()const
 	{
 		return side;
 	}
-	double get_height()const
-	{
-		return sqrt(3) / 2 * side;
-	}
 	void set_side(double side)
 	{
 		this->side = side;
 	}
 
-	Triangle(double side)
+	EquilateralTriangle(double side)
 	{
 		set_side(side);
-		cout << "TConstructor:\t" << this << endl;
+		cout << "EConstructor:\t" << this << endl;
 	}
-	~Triangle()
+	~EquilateralTriangle()
 	{
-		cout << "TDestructor:\t" << this << endl;
+		cout << "EDestructor:\t" << this << endl;
 	}
 
+	double get_height()const
+	{
+		return sqrt(3) / 2 * side;
+	}
 	double get_area()const
 	{
 		return (get_height() / 2) * side;
@@ -232,7 +247,80 @@ public:
 	{
 		Figure::print();
 		cout << typeid(*this).name() << endl;
-		cout << "Длинна треугольника: " << side << endl;
+		cout << "Длинна равностороннего треугольника: " << side << endl;
+	}
+};
+
+class IsoscelesTriangle : public Triangle
+{
+	double side;
+	double base;
+
+public:
+	double get_side()const
+	{
+		return side;
+	}
+	double get_base()const
+	{
+		return base;
+	}
+	void set_side(double side)
+	{
+		this->side = side;
+	}
+	void set_base(double base)
+	{
+		this->base = base;
+	}
+
+	IsoscelesTriangle(double side, double base)
+	{
+		set_side(side);
+		set_base(base);
+		cout << "IConstructor:\t" << this << endl;
+	}
+	~IsoscelesTriangle()
+	{
+		cout << "IDestructor:\t" << this << endl;
+	}
+
+	double get_height()const
+	{
+		return sqrt(4 * pow(side, 2) - pow(base, 2)) /2;
+	}
+	double get_area()const
+	{
+		return (get_height() * base) / 2;
+	}
+	double get_perimeter()const
+	{
+		return 2 * side + base;
+	}
+	void draw()const
+	{
+		for (int i = 0; i < base; i++)
+		{
+			for (int j = 0; j <= base; j++)
+			{
+				if (i <= base / 2)
+				{
+					if (j >= (base / 2) - i && j <= (base / 2) + i)cout << "*";
+					else
+					{
+						cout << " ";
+					}
+				}
+			}
+			cout << endl;
+		}
+	}
+	void print()const
+	{
+		Figure::print();
+		cout << typeid(*this).name() << endl;
+		cout << "длинна равнобедренного треугольника: " << side << endl;
+		cout << "длинна основания равнобедренного треугольника: " << base << endl;
 	}
 };
 
@@ -248,7 +336,10 @@ void main()
 	Circle c(5);
 	c.print();
 	cout << "\n-----------------------------------------------------------\n";
-	Triangle t(8);
-	t.print();
+	EquilateralTriangle e(8);
+	e.print();
+	cout << "\n-----------------------------------------------------------\n";
+	IsoscelesTriangle i(40, 10);
+	i.print();
 	cout << "\n-----------------------------------------------------------\n";
 }
